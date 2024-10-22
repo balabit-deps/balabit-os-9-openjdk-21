@@ -297,7 +297,8 @@ dpkg_buildflags_hs = \
 	DEB_CFLAGS_MAINT_STRIP="-O2 -Werror=format-security" \
 	DEB_CXXFLAGS_MAINT_STRIP="-O2 -Werror=format-security" \
 	DEB_CFLAGS_MAINT_APPEND="-fno-stack-protector -Wno-deprecated-declarations" \
-	DEB_CXXFLAGS_MAINT_APPEND="-fno-stack-protector -Wno-deprecated-declarations$(if $(filter $(DEB_HOST_ARCH), armel armhf), -fpermissive)"
+	DEB_CXXFLAGS_MAINT_APPEND="-fno-stack-protector -Wno-deprecated-declarations$(if $(filter $(DEB_HOST_ARCH), armel armhf), -fpermissive)" \
+	DEB_CFLAGS_MAINT_APPEND="$(if $(filter $(DEB_HOST_ARCH), armel armhf), -DSTAP_SDT_ARG_CONSTRAINT=g)"
 # jdk/make/CompileDemos.gmk (SetupJVMTIDemo) doesn't like commas in flags
 dpkg_buildflags_hs += \
 	DEB_LDFLAGS_MAINT_STRIP="-Wl,-z,relro -Wl,-Bsymbolic-functions" \
@@ -313,7 +314,8 @@ dpkg_buildflags_zero = \
 	DEB_CFLAGS_MAINT_STRIP="-O2 -Werror=format-security -fstack-protector -fstack-protector-strong" \
 	DEB_CXXFLAGS_MAINT_STRIP="-O2 -Werror=format-security -fstack-protector -fstack-protector-strong" \
 	DEB_CFLAGS_MAINT_APPEND="-fno-stack-protector -Wno-deprecated-declarations" \
-	DEB_CXXFLAGS_MAINT_APPEND="-fno-stack-protector -Wno-deprecated-declarations"
+	DEB_CXXFLAGS_MAINT_APPEND="-fno-stack-protector -Wno-deprecated-declarations" \
+	DEB_CFLAGS_MAINT_APPEND="$(if $(filter $(DEB_HOST_ARCH), armel armhf), -DSTAP_SDT_ARG_CONSTRAINT=g)"
 # jdk/make/CompileDemos.gmk (SetupJVMTIDemo) doesn't like commas in flags
 dpkg_buildflags_zero += \
 	DEB_LDFLAGS_MAINT_STRIP="-Wl,-z,relro -Wl,-Bsymbolic-functions" \
@@ -383,8 +385,10 @@ else ifeq ($(with_nss),no)
   CONFIGURE_ARGS += --disable-nss
 endif
 
-ifeq ($(with_systemtap),yes)
-  CONFIGURE_ARGS += --enable-systemtap --with-abs-install-dir=/$(basedir)
+# S390x does not support dtrace probes
+# https://github.com/openjdk/jdk/pull/13228
+ifeq ($(DEB_HOST_ARCH),s390x)
+  CONFIGURE_ARGS += --enable-dtrace
 endif
 
 COMMON_CONFIGURE_ARGS =
@@ -417,10 +421,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH),$(hotspot_archs)))
   DEFAULT_CONFIGURE_ARGS += --disable-precompiled-headers
 endif
 
-ifneq (,$(filter $(DEB_HOST_ARCH), armhf i386))
-  DEFAULT_CONFIGURE_ARGS += --enable-fallback-linker
-endif
-
 ifneq (,$(filter $(DEB_HOST_ARCH), powerpc))
   DEFAULT_CONFIGURE_ARGS += --with-boot-jdk-jvmargs="-XX:ThreadStackSize=2240"
 endif
@@ -433,6 +433,13 @@ ifeq ($(with_check),yes)
   COMMON_CONFIGURE_ARGS += --with-jtreg=/usr/share/jtreg
 else
   COMMON_CONFIGURE_ARGS += --without-jtreg --disable-jtreg-failure-handler
+endif
+
+# openjdk provides java.lang.foreign.Linker implementation for
+# amd64 arm64 ppc64el riscv64 s390x. Other architectures use
+# a libffi-based linker.
+ifeq (,$(filter $(DEB_HOST_ARCH), amd64 arm64 ppc64el riscv64 s390x))
+  COMMON_CONFIGURE_ARGS += --enable-fallback-linker
 endif
 
 COMMON_CONFIGURE_ARGS += --disable-warnings-as-errors
@@ -633,12 +640,6 @@ jre_hl_tools	:= $(filter-out $(jre_tools), $(all_jre_tools))
 
 # build dependencies
 ifneq (,$(filter $(distrel),precise))
-  bd_autotools = autoconf2.69, automake, autotools-dev,
-else
-  bd_autotools = autoconf, automake, autotools-dev,
-endif
-
-ifneq (,$(filter $(distrel),precise))
     bd_bootstrap = openjdk-20-jdk-headless | openjdk-21-jdk-headless,
 else ifneq (,$(filter $(distrel),stretch buster bullseye bookworm trusty xenial bionic focal jammy))
     bd_bootstrap = openjdk-20-jdk-headless:native | openjdk-21-jdk-headless:native,
@@ -662,6 +663,14 @@ else ifneq (,$(filter $(distrel), stretch xenial))
   bd_debhelper = debhelper (>= 9.20141010), dpkg-dev (>= 1.17.14),
 else
   bd_debhelper = debhelper (>= 11),
+endif
+
+ifneq (,$(filter $(distrel),precise))
+  bd_autotools = autoconf2.69, automake, autotools-dev,
+else ifneq (,$(filter $(old_debhelper), old veryold))
+  bd_autotools = autoconf, automake, autotools-dev,
+else
+  bd_autotools = autoconf, automake,
 endif
 
 ifneq (,$(filter $(distrel),precise))
@@ -712,6 +721,13 @@ endif
 bd_ant = ant, ant-optional,
 
 bd_fastjar = fastjar (>= 2:0.96-0ubuntu2),
+
+ifneq (,$(filter $(distrel), wheezy jessie stretch buster bullseye bionic focal jammy))
+  bd_pkgconf = pkg-config,
+else
+  bd_pkgconf = pkgconf,
+endif
+
 ifeq ($(with_nss),yes)
   ifneq (,$(filter $(distrel),squeeze lucid precise quantal))
     bd_nss = libnss3-dev (>= 3.12.3),
@@ -721,9 +737,7 @@ ifeq ($(with_nss),yes)
     bd_nss = libnss3-dev (>= 2:3.17.1),
   endif
 endif
-ifeq ($(with_systemtap),yes)
-  bd_systemtap = systemtap-sdt-dev [!sh4],
-endif
+bd_systemtap = systemtap-sdt-dev [!sh4 !s390x],
 
 ifeq (,$(filter $(distrel),jessie stretch buster precise trusty xenial bionic focal groovy))
   with_debugedit = yes
@@ -941,6 +955,7 @@ debian/control: debian/control.in debian/tests/control debian/rules debian/watch
 	      -e 's/@bd_zero@/$(bd_zero)/g' \
 	      -e 's/@bd_gcc@/$(bd_gcc)/g' \
 	      -e 's/@bd_syslibs@/$(bd_syslibs)/g' \
+	      -e 's/@bd_pkgconf@/$(bd_pkgconf)/g' \
 	      -e 's/@bd_fastjar@/$(bd_fastjar)/g' \
 	      -e 's/@bd_nss@/$(bd_nss)/g' \
 	      -e 's/@bd_systemtap@/$(bd_systemtap)/g' \
@@ -1861,11 +1876,6 @@ endif
 	mkdir -p $(d_jrehl)/usr/lib/debug/usr/lib/jvm/$(jdirname)
 	ln -sf $(jdirname) $(d_jrehl)/usr/lib/debug/usr/lib/jvm/$(jdiralias)
 
-ifeq ($(with_systemtap),yes FIXME)
-	: # systemtap support
-	mkdir -p $(d_jrehl)/usr/share/systemtap/tapset
-	cp -p build/tapset/hotspot.stp $(d_jrehl)/usr/share/systemtap/tapset/
-endif
 
 	: # install lintian overrides
 	for FILE in debian/*.overrides; do \
@@ -1890,7 +1900,7 @@ ifeq ($(with_docs),yes)
 	  cp -a $$i $(d_doc)/usr/share/doc/$(p_jrehl)/; \
 	  ln -sf ../$(p_jrehl)/$$b $(d_doc)/usr/share/doc/$(p_doc)/$$b; \
 	done
-	rm -v $(d_doc)/usr/share/doc/$(p_jrehl)/api/script-dir/jquery-3.6.1.min.js
+	rm -v $(d_doc)/usr/share/doc/$(p_jrehl)/api/script-dir/{jquery-3.7.1.min.js,jquery-ui.min.css,jquery-ui.min.js}
 	dh_link -p$(p_doc) \
 	  /usr/share/javascript/jquery/jquery.min.js \
 	    /usr/share/doc/$(p_jrehl)/api/script-dir/jquery-3.6.1.min.js
@@ -1989,7 +1999,7 @@ endif
 	dh_builddeb -a $(nodemo) $(nojrez) #$(bd_options)
 
 git_project		= jdk21u
-git_tag			= jdk-21.0.4+7
+git_tag			= jdk-21.0.5+11
 package_version		= $(shell echo $(PKGVERSION) | sed 's/-[^-][^-]*$$//')
 ifneq ($(is_upstream_release),yes)
   package_version	:= $(subst +,~,$(package_version))
