@@ -1,23 +1,50 @@
-openjdk-21 (21.0.5+11-1ubuntu1~22.04) jammy-security; urgency=medium
+openjdk-21 (21.0.6+7-1~22.04.1) jammy-security; urgency=high
 
-  * d/control: Regenerate for upload to Ubuntu 22.04
-  * d/rules: Add CFLAG to avert FTBFS on armhf due
-    to GCC-11 ICE reported by LP-1953128
-  * d/changelog: Add additional CVE information to the
-    21.0.5+11 changelog entry
-  * Upload to Ubuntu 22.04
+  * Upload to Ubuntu 22.04.
+  * d/rules: disable dtrace on jammy armhf (LP: #2091226).
+  * d/t/problems.csv: synchronize problem list with openjdk-25. The
+    problemlist did not include issues from October 2024 update.
 
- -- Pushkar Kulkarni <pushkar.kulkarni@canonical.com>  Tue, 22 Oct 2024 14:15:11 +0530
+ -- Vladimir Petko <vladimir.petko@canonical.com>  Fri, 24 Jan 2025 11:52:17 +1300
+
+openjdk-21 (21.0.6+7-1) unstable; urgency=high
+
+  * OpenJDK 21.0.6 release, build 7. Release notes:
+    https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-January/040828.html
+    - CVEs:
+      +  CVE-2025-21502 - 8330045: Enhance array handling.
+
+  [ Vladimir Petko ]
+  * d/rules: disable c2 compiler for boot jdk on s390x to avoid ftbfs.
+  * d/p/jdk-8347014-proposed.patch: Define MAP_FIXED_NOREPLACE_value for alpha.
+  * d/rules: Add -fno-delete-null-pointer-checks for armhf and armel.
+    The flag was removed in JDK-8316893 causing JVM lockup.
+  * d/rules: Dump complete hs_err_pid and replay_pid logs to stdout.
+  * d/rules: create link to jquery-3.7.1.min.js instead of jquery-3.6.1.min.js.
+    Also link jquery-ui.min.{js,css} (LP: #2095455).
+  * d/{watch,copyright}: regenerate.
+
+  [ Matthias Klose ]
+  * Try to work-around a ftbfs on alpha. For now we keep the
+    zero-alpha-workaround patch enabled instead of jdk-8347014-proposed.
+  * d/rules: Also dump logs for zero builds and for build failures.
+
+ -- Matthias Klose <doko@ubuntu.com>  Wed, 22 Jan 2025 08:58:11 +0100
+
+openjdk-21 (21.0.6~6ea-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.6 early access, build 6.
+  * Really configure with --enable-dtrace on !s390x.
+
+ -- Matthias Klose <doko@ubuntu.com>  Fri, 20 Dec 2024 09:54:05 +0100
 
 openjdk-21 (21.0.5+11-1) unstable; urgency=high
 
   * OpenJDK 21.0.5 release, build 8.
-
-    - CVEs
-      + CVE-2024-21208, 8328286: Enhance HTTP client
-      + CVE-2024-21210, 8328544: Improve handling of vectorization
-      + CVE-2024-21217, 8331446: Improve deserialization support
-      + CVE-2024-21235, 8332644: Improve graph optimizations
+    - CVE-2024-21208
+    - CVE-2024-21210
+    - CVE-2024-21217
+    - CVE-2024-21235
 
   [ Vladimir Petko ]
   * d/rules: do not include dtrace support for S390x (JDK-8305174).
