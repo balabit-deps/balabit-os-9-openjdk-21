@@ -1,7 +1,8 @@
 Source: openjdk-21
 Section: java
 Priority: optional
-Maintainer: OpenJDK Team <openjdk-21@packages.debian.org>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: OpenJDK Team <openjdk-21@packages.debian.org>
 Uploaders: Matthias Klose <doko@ubuntu.com>
 Build-Depends: debhelper (>= 11),
   m4, lsb-release, zip, unzip,

@@ -1,11 +1,43 @@
-openjdk-21 (21.0.6+7-1~22.04.1) jammy-security; urgency=high
+openjdk-21 (21.0.7+6~us1-0ubuntu1~22.04) jammy-security; urgency=medium
 
-  * Upload to Ubuntu 22.04.
-  * d/rules: disable dtrace on jammy armhf (LP: #2091226).
-  * d/t/problems.csv: synchronize problem list with openjdk-25. The
-    problemlist did not include issues from October 2024 update.
+  * OpenJDK 21.0.7 release, build 6. Release notes:
+    https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-April/043308.html
 
- -- Vladimir Petko <vladimir.petko@canonical.com>  Fri, 24 Jan 2025 11:52:17 +1300
+    - CVEs:
+      + CVE-2025-21587
+      + CVE-2025-30691
+      + CVE-2025-30698
+
+  [ Matthias Klose ]
+  * Honour DEB_BUILD_OPTIONS=parallel=N while running jtreg tests (Helmut
+    Grohne). Addresses: #1095920.
+
+  [ Pushkar Kulkarni ]
+  * d/control: regenerate for Ubuntu 22.04
+  * Upload to Ubuntu 22.04
+
+ -- Pushkar Kulkarni <pushkar.kulkarni@canonical.com>  Thu, 17 Apr 2025 11:27:30 +0530
+
+openjdk-21 (21.0.7~8ea-1) unstable; urgency=medium
+
+  [ NOTE: This really is 21.0.7~5ea-1, the version in the last upload was wrong]
+  * OpenJDK 21.0.7 early access, build 5.
+
+  [ Vladimir Petko ]
+  * d/t/problems.csv: Disable tests failing due to upstream bugs.
+
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 27 Mar 2025 12:19:44 +0100
+
+openjdk-21 (21.0.7~7ea-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.7 early access, build 4.
+
+  [ Vladimir Petko ]
+  * d/t/problems.csv: Synchronize problemlist with the master branch.
+  * d/rules: Disable dtrace on jammy armhf (was not enabled before and cannot
+    be built due to a GCC ICE (see LP #2091225).
+
+ -- Matthias Klose <doko@ubuntu.com>  Sat, 15 Mar 2025 08:27:31 +0100
 
 openjdk-21 (21.0.6+7-1) unstable; urgency=high
 
