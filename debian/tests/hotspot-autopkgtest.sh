@@ -22,6 +22,7 @@ HOTSPOT_JTREG_NATIVE_PATH=${jdk_path}/testsuite/hotspot/jtreg/native
 
 problem_list=${AUTOPKGTEST_TMP}/problems.txt
 debian/tests/write-problems.sh ${problem_list} ${HOTSPOT_JTREG_PATH}/ProblemList.txt hotspot
+cat debian/tests/skip-large-autopkgtest.txt >> ${problem_list}
 
 ARGS="$*"
 JT_DEFAULT_ARGS="-exclude:${problem_list} -k:!stress :tier1"

@@ -27,7 +27,7 @@ EOF
 ${jdk_path}/bin/java -Djava.security.debug=all \
     -cp . ${AUTOPKGTEST_TMP}/Test.java > ${AUTOPKGTEST_TMP}/dependencies-pcsc.log 2>&1
 
-if grep "pcsc: Using PC/SC library" ${AUTOPKGTEST_TMP}/dependencies-pcsc.log; then
+if grep "Using PC/SC library" ${AUTOPKGTEST_TMP}/dependencies-pcsc.log; then
     echo "Test passed."
 else
     cat ${AUTOPKGTEST_TMP}/dependencies-pcsc.log

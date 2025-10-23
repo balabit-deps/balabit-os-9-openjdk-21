@@ -83,6 +83,7 @@ else
 endif
 
 is_upstream_release = yes
+#is_upstream_release =
 
 srcdir		= .
 builddir	= build
@@ -276,10 +277,14 @@ else ifneq (,$(filter $(distrel),mantic noble))
   export CC = $(DEB_HOST_GNU_TYPE)-gcc-13
   export CXX = $(DEB_HOST_GNU_TYPE)-g++-13
   bd_gcc = g++-13 <!cross>,
-else
+else ifneq (,$(filter $(distrel),trixie oracular plucky))
   export CC = $(DEB_HOST_GNU_TYPE)-gcc-14
   export CXX = $(DEB_HOST_GNU_TYPE)-g++-14
   bd_gcc = g++-14 <!cross>,
+else
+  export CC = $(DEB_HOST_GNU_TYPE)-gcc-15
+  export CXX = $(DEB_HOST_GNU_TYPE)-g++-15
+  bd_gcc = g++-15 <!cross>,
 endif
 
 # GCC 11 only
@@ -1003,6 +1008,7 @@ debian/tests/control: debian/tests/control.in debian/rules
 		-e 's/@jtreg_dep@/$(jtreg_dep)/g' \
 		-e 's/@testng_dep@/$(testng_dep)/g' \
 		-e 's/@basename@/$(basename)/g' \
+		-e 's/@jtreg_archs@/$(jtreg_archs)/g' \
 		$< > $@;
 
 debian/tests/%.sh: debian/tests/%.in debian/rules
@@ -1355,7 +1361,7 @@ else
   lib_ext_dirs := $(filter-out arm hppa, $(lib_ext_dirs))
 endif
 
-install: packaging-files
+install: packaging-files build
 	dh_testdir
 	dh_testroot
 	dh_prep || dh_clean -k
@@ -2034,7 +2040,7 @@ endif
 	dh_builddeb -a $(nodemo) $(nojrez) #$(bd_options)
 
 git_project		= jdk21u
-git_tag			= jdk-21.0.8+9
+git_tag			= jdk-21.0.9+10
 package_version		= $(shell echo $(PKGVERSION) | sed 's/-[^-][^-]*$$//')
 ifneq ($(is_upstream_release),yes)
   package_version	:= $(subst +,~,$(package_version))

@@ -1,6 +1,6 @@
 --- a/src/hotspot/os/linux/os_linux.cpp
 +++ b/src/hotspot/os/linux/os_linux.cpp
-@@ -2985,6 +2985,10 @@
+@@ -2878,6 +2878,10 @@ void os::pd_commit_memory_or_exit(char*
  // Note that the value for MAP_FIXED_NOREPLACE differs between architectures, but all architectures
  // supported by OpenJDK share the same flag value.
  #define MAP_FIXED_NOREPLACE_value 0x100000

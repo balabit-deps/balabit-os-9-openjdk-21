@@ -1,37 +1,62 @@
-openjdk-21 (21.0.8+9~us1-0ubuntu1~22.04.1) jammy-security; urgency=medium
+openjdk-21 (21.0.9+10-1~22.04) jammy-security; urgency=medium
 
   * Upload to Ubuntu 22.04.
-  * CVEs:
-    - CVE-2025-50059, 8350991: Improve HTTP client header handling
-    - CVE-2025-30749, 8348989: Better Glyph drawing
-    - CVE-2025-50106, 8360147: Better Glyph drawing redux
-    - CVE-2025-30754, 8349594: Enhance TLS protocol support
-  * Security fixes:
-    - 8349111: Enhance Swing supports
-    - 8345625: Better HTTP connections
 
- -- Vladimir Petko <vladimir.petko@canonical.com>  Thu, 17 Jul 2025 09:56:18 +1200
+ -- Pushkar Kulkarni <pushkar.kulkarni@canonical.com>  Thu, 23 Oct 2025 18:09:18 +0530
 
-openjdk-21 (21.0.8+9~us1-0ubuntu1) questing; urgency=medium
+openjdk-21 (21.0.9+10-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.9 release, build 10.
+    - CVEs:
+      + CVE-2025-53057, 8360937: Enhance certificate handling.
+      + CVE-2025-53066, 8356294: Enhance Path Factories.
+      + CVE-2025-61748, 8359454: Enhance String handling.
+
+  [ Vladimir Petko ]
+  * d/t/dependencies.sh: Relax test assertion for PC/SC library.
+  * d/p/jdk-8369450.patch: Fix ftbfs due to rust-coreutils date. LP: #2127120.
+  * d/rules: Run jtreg autopkgtests only on jtreg architectures.
+  * d/t/{hotspot-autopkgtest.in, jdk-autopkgtest.in}: Skip tests
+    that require a large amount of memory.
+  * d/t/{control,hotspot-autopkgtest.sh, jdk-autopkgtest.sh}:
+    Regenerate.
+
+ -- Matthias Klose <doko@ubuntu.com>  Wed, 22 Oct 2025 08:07:14 +0200
+
+openjdk-21 (21.0.9~8ea-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.9 early access, build 8.
+
+  [ Matthias Klose ]
+  * d/rules: Let the install target depend on the build target. Closes: #1105471.
+
+  [ Vladimir Petko ]
+  * d/t/problems.csv: Synchronize problem list.
+
+ -- Matthias Klose <doko@ubuntu.com>  Sat, 27 Sep 2025 13:52:21 +0200
+
+openjdk-21 (21.0.9~5ea-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.9 early access, build 5.
+
+  [ Vladimir Petko ]
+  * d/copyright-generator/copyright-gen.py: bump copyright year.
+  * d/copyright: regenerate.
+
+  [ Matthias Klose ]
+  * Build using GCC 15 on development releases.
+
+ -- Matthias Klose <doko@ubuntu.com>  Fri, 29 Aug 2025 12:59:33 +0200
+
+openjdk-21 (21.0.8+9-1) unstable; urgency=high
 
   * OpenJDK 21.0.8 release, build 9.
-    - Addresses CVE-2025-50059, CVE-2025-30749, CVE-2025-50106,
-      CVE-2025-30754. See
-      https://openjdk.org/groups/vulnerability/advisories/2025-07-15
-    - Release notes:
-      https://mail.openjdk.org/pipermail/jdk-updates-dev/2025-July/045617.html
-  * d/copyright: regenerate.
-  * d/copyright-generator/copyright-gen.py: bump copyright year.
+    - Addresses CVE-2025-5010, CVE-2025-50059, CVE-2025-30754, CVE-2025-30749.
 
- -- Vladimir Petko <vladimir.petko@canonical.com>  Wed, 16 Jul 2025 09:35:15 +1200
+  [ Vladimir Petko ]
+  * d/p/jdk-8359735-proposed.patch: Fix process tests failing in Ubuntu 25.10.
 
-openjdk-21 (21.0.8~8ea-0ubuntu1) questing; urgency=medium
-
-  * OpenJDK 21.0.8 early access, build 8.
-  * d/p/jdk-8359735.patch: fix process tests failing in Ubuntu 25.10
-    (questing).
-
- -- Vladimir Petko <vladimir.petko@canonical.com>  Sat, 05 Jul 2025 18:50:10 +1200
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 17 Jul 2025 16:12:28 +0200
 
 openjdk-21 (21.0.8~5ea-1) unstable; urgency=medium
 
