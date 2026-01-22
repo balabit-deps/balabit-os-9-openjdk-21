@@ -17,5 +17,5 @@ Restrictions: allow-stderr, skippable, flaky, rw-build-tree
 Architecture: @jtreg_archs@
 
 Tests: dependencies.sh
-Depends: @, build-essential, bash
-Restrictions: allow-stderr, skippable, flaky
+Depends: @basename@-jre-headless, build-essential, bash
+Restrictions: allow-stderr

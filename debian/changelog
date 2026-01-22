@@ -1,8 +1,47 @@
-openjdk-21 (21.0.9+10-1~22.04) jammy-security; urgency=medium
+openjdk-21 (21.0.10+7-1~22.04) jammy-security; urgency=medium
 
   * Upload to Ubuntu 22.04.
+  * Release notes:
+    https://mail.openjdk.org/pipermail/jdk-updates-dev/2026-January/051684.html.
 
- -- Pushkar Kulkarni <pushkar.kulkarni@canonical.com>  Thu, 23 Oct 2025 18:09:18 +0530
+ -- Vladimir Petko <vladimir.petko@canonical.com>  Fri, 23 Jan 2026 12:45:21 +1300
+
+openjdk-21 (21.0.10+7-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.10 release, build 7.
+   - CVEs:
+      + CVE-2026-21945: 8368032: Enhance Certificate Checking.
+      + CVE-2026-21932: 8359501: Enhance Handling of URIs.
+      + CVE-2026-21933: 8362632: Improve HttpServer Request handling.
+      + CVE-2026-21925: 8341496: Improve JMX connections.
+  * d/t/control: Regenerate.
+
+ -- Vladimir Petko <vladimir.petko@canonical.com>  Thu, 22 Jan 2026 10:57:02 +1300
+
+openjdk-21 (21.0.10~6ea-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.10 early access, build 6.
+  * Update override comments for unstripped-binary-or-object.
+    We need to keep symbols for Native Memory Tracking to work.
+  * d/{JB-doc.overrides.in, JB-jre-headless.overrides.in}: Add override
+    for old FSF copyright address.
+  * d/s/lintian-overrides: Override false positive debian-rules-calls-
+    nproc. The utility is used to log the number of processors.
+  * d/t/control.in: dependencies.sh test needs only jre-headless
+    package, remove flaky and skippable flags.
+
+ -- Vladimir Petko <vladimir.petko@canonical.com>  Mon, 05 Jan 2026 17:35:14 +1300
+
+openjdk-21 (21.0.10~4ea-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.10 early access, build 4.
+
+  [ Matthias Klose ]
+  * d/rules: Adjust any_archs, hppa is unlikely to get fixed for the
+    opposite stack frame growth.
+  * d/rules: Run the testsuite for loong64.
+
+ -- Matthias Klose <doko@ubuntu.com>  Sat, 29 Nov 2025 19:56:59 +0100
 
 openjdk-21 (21.0.9+10-1) unstable; urgency=medium
 
