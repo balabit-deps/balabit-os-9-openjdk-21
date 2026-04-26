@@ -48,3 +48,4 @@ jdk-8312488.patch
 zero-alpha-workaround.diff
 #jdk-8347014-proposed.patch
 jdk-8359735.patch
+jdk-8381555.diff

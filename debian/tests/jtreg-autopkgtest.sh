@@ -29,6 +29,9 @@ jt_options="${JTREG_OPTIONS:-}"
 if [[ "armel" == *"${host_arch}"* ]]; then
   jt_options+=" -Xmx256M"
 fi
+if [[ "s390x" != *"${host_arch}"* ]]; then
+  jt_options+=" -agentvm"
+fi
 if dpkg --compare-versions ${jtreg_version} ge 4.2; then
   njobs=auto
   for opt in ${DEB_BUILD_OPTIONS:-}; do
@@ -38,6 +41,13 @@ if dpkg --compare-versions ${jtreg_version} ge 4.2; then
   done
   jt_options+=" -conc:$njobs"
 fi
+
+# timeouts should be higher for zero builds
+case ${host_arch} in
+    loong64)  timeout=30;;
+    riscv64)  timeout=30;;
+    *)        timeout=10;;
+esac
 
 # check java binary
 if [ ! -x "${JDK_TO_TEST}/bin/java" ]; then
@@ -108,8 +118,7 @@ for i in 0 1 2; do
     -automatic \
     -retain:none \
     -ignore:quiet \
-    -agentvm \
-    -timeout:10 \
+    -timeout:${timeout} \
     -workDir:"${jtwork_dir}" \
     -reportDir:"${report_dir}" \
     -jdk:${JDK_TO_TEST} \
