@@ -2,7 +2,7 @@ Source: openjdk-21
 Section: java
 Priority: optional
 Maintainer: OpenJDK Team <openjdk-21@packages.debian.org>
-Uploaders: Matthias Klose <doko@ubuntu.com>
+Uploaders: Matthias Klose <doko@ubuntu.com>, Vladimir Petko <vladimir.petko@canonical.com>
 Build-Depends: debhelper (>= 11),
   m4, lsb-release, zip, unzip,
   sharutils, gawk, cpio, procps, wdiff, pkg-config, fastjar (>= 2:0.96-0ubuntu2),
