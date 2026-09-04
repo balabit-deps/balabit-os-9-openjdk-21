@@ -269,7 +269,7 @@ def generate_copyright():
 
   generate_header_stanza();
 
-  licenses = f"""GPL with Classpath exception
+  licenses = f"""GPL2 with Classpath exception
 
 --- begin of LICENSE ---
 

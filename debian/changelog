@@ -1,9 +1,35 @@
-openjdk-21 (21.0.12+8-1~22.04) jammy-security; urgency=medium
+openjdk-21 (21.0.12.1+1-1~22.04.4) jammy-security; urgency=medium
 
   * Upload to Ubuntu 22.04.
   * d/control: regenerate for jammy
+  * d/rules: workaround for C2 crash on s390x
 
- -- Pushkar Kulkarni <pushkar.kulkarni@canonical.com>  Thu, 23 Jul 2026 19:11:59 +0530
+ -- Pushkar Kulkarni <pushkar.kulkarni@canonical.com>  Fri, 04 Sep 2026 11:46:42 +0530
+
+openjdk-21 (21.0.12.1+1-1) unstable; urgency=medium
+
+  * OpenJDK 21.0.12.1 release, build 1.
+    - CVEs:
+      + CVE-2026-61308
+      + CVE-2026-70907
+      + CVE-2026-60589
+
+ -- Vladimir Petko <vladimir.petko@canonical.com>  Wed, 19 Aug 2026 09:45:20 +1200
+
+openjdk-21 (21.0.12+8-2) unstable; urgency=medium
+
+  [ Vladimir Petko ]
+  * d/t/jtreg-autopkgtest.in: Do not fail tests if ulimit can not be
+    set.
+  * d/t/problems.csv: Add test exclusions.
+  * d/rules: Enable S390x C2 compiler.
+  * d/rules: Collect hotspot error and replay logs after jtreg tests.
+  * d/copyright-generator: Fix license SPDX identifiers.
+
+  [ Matthias Klose ]
+  * Build using GCC 16 on development releases.
+
+ -- Vladimir Petko <vladimir.petko@canonical.com>  Sun, 16 Aug 2026 14:17:53 +1200
 
 openjdk-21 (21.0.12+8-1) unstable; urgency=medium
 

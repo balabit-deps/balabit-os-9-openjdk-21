@@ -109,3 +109,6 @@ FAILED: java/time/test/java/time/format/TestUTCParse.java,JDK-8381709,jtreg test
 FAILED: serviceability/jvmti/GetModulesInfo/JvmtiGetAllModulesTest.java,JDK-8386138,Problemlisted upstream,:openjdk-27:,arch-all,:release-all
 FAILED: compiler/loopopts/superword/TestDoNotFilterNaNSummands.java,JDK-8370408,Known issue in s390x C2,:openjdk-25::openjdk-26::openjdk-27::openjdk-28:,s390x:,:release-all
 FAILED: compiler/loopopts/superword/TestMemorySegmentFilterSummands.java,JDK-8370408,Known issue in s390x C2,:openjdk-25::openjdk-26::openjdk-27::openjdk-28:,s390x:,:release-all
+FAILED: serviceability/attach/AttachNegativePidTest.java,,Lingered App not found (CI),:openjdk-21:,armhf:,:jammy
+FAILED: jdk/jfr/event/oldobject/TestDFSWithSmallStack.java,,Test fails with the small stack,:openjdk-21:,i386,:release-all
+FAILED: compiler/loopopts/superword/TestIndependentPacksWithCyclicDependency.java,,Invalid test3 result: dataI[3]: 1116942242 != 7,:openjdk-21:,:armhf,:release-all

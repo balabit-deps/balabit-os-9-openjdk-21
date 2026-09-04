@@ -64,7 +64,7 @@ Copyright:
   Portions Copyright (c) 1995  Colin Plumb
   Portions Copyright (c) 1997-2003 Eastman Kodak Company
   See other third party notices under the License section
-License:   GPL with Classpath exception
+License:   GPL2 with Classpath exception
   .
   --- begin of LICENSE ---
   .
@@ -4470,7 +4470,7 @@ License:   GPL with Classpath exception
 
 Files: googletest/*
 Copyright: Copyright 2008, Google Inc.
-License: BSD-C3
+License: BSD-3-Clause
   Copyright 2008, Google Inc.
   All rights reserved.
   .
@@ -4524,7 +4524,7 @@ License: MIT
 
 Files: debian/dbg.py
 Copyright: Copyright 2016, Red Hat and individual contributors
-License: LGPL
+License: LGPL-2.1
   # Copyright 2016, Red Hat and individual contributors
   # by the @authors tag.
   #

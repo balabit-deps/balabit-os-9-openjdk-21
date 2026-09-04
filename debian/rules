@@ -280,10 +280,14 @@ else ifneq (,$(filter $(distrel),trixie oracular plucky))
   export CC = $(DEB_HOST_GNU_TYPE)-gcc-14
   export CXX = $(DEB_HOST_GNU_TYPE)-g++-14
   bd_gcc = g++-14 <!cross>,
-else
+else ifneq (,$(filter $(distrel),questing resolute))
   export CC = $(DEB_HOST_GNU_TYPE)-gcc-15
   export CXX = $(DEB_HOST_GNU_TYPE)-g++-15
   bd_gcc = g++-15 <!cross>,
+else
+  export CC = $(DEB_HOST_GNU_TYPE)-gcc-16
+  export CXX = $(DEB_HOST_GNU_TYPE)-g++-16
+  bd_gcc = g++-16 <!cross>,
 endif
 
 # GCC 11 only
@@ -442,9 +446,15 @@ ifneq (,$(filter $(DEB_HOST_ARCH), ppc64 ppc64el))
   ZERO_CONFIGURE_ARGS += --with-boot-jdk-jvmargs="-XX:ThreadStackSize=2240"
 endif
 
-# Disable C2 compiler due to the bug in 21.0.5+11 update
-ifneq (,$(filter $(DEB_HOST_ARCH), s390x))
-  COMMON_CONFIGURE_ARGS += --with-boot-jdk-jvmargs="-XX:TieredStopAtLevel=1"
+ifneq (,$(filter $(DEB_HOST_ARCH), alpha ppc64 ppc64el powerpc s390x sparc64))
+  ifeq ($(derivative)-$(DEB_HOST_ARCH),Ubuntu-s390x)
+    # Disable C2 compiler to workaround launchpad build chroot issue
+    COMMON_CONFIGURE_ARGS += \
+	--with-boot-jdk-jvmargs="-XX:TieredStopAtLevel=1 -XX:ThreadStackSize=2240 -Xss4M"
+  else
+    COMMON_CONFIGURE_ARGS += \
+	--with-boot-jdk-jvmargs="-XX:ThreadStackSize=2240 -Xss4M"
+  endif
 endif
 
 ifeq ($(with_check),yes)
@@ -1330,7 +1340,7 @@ ifneq (,$(filter $(VMNAME), $(with_jtreg_check)))
 	@echo "END jtreg-summary-$(VMNAME)"
 
 	-for i in hotspot langtools jaxp jdk; do \
-	  find jtreg-test-output/$$i/JTwork/ -name '*.jtr'; \
+	  find jtreg-test-output/$$i/JTwork/ -name '*.jtr' -o -name 'hs_err_pid*.log' -o -name 'replay_pid*.log'; \
 	done | sort -u > jtreg-test-output/failed_tests-$(VMNAME).list; \
 	GZIP=-9vn tar --ignore-failed-read -C . -c -z -f jtreg-test-output/failed_tests-$(VMNAME).tar.gz -T jtreg-test-output/failed_tests-$(VMNAME).list
 	GZIP=-9vn tar -C . -c -z -f jtreg-test-output/jtreport-$(VMNAME).tar.gz $$(find jtreg-test-output -name JTreport)
@@ -2085,7 +2095,7 @@ endif
 	dh_builddeb -a $(nodemo) $(nojrez) #$(bd_options)
 
 git_project		= jdk21u
-git_tag			= jdk-21.0.12+8
+git_tag			= jdk-21.0.12.1+1
 package_version		= $(shell echo $(PKGVERSION) | sed 's/-[^-][^-]*$$//')
 ifneq ($(is_upstream_release),yes)
   package_version	:= $(subst +,~,$(package_version))
